@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LeadFlow AI - AI Lead Recovery & Appointment Automation
 
 LeadFlow AI is a B2B SaaS designed for high-value Tunisian businesses (Real Estate, Automotive, Hotels) to automate lead qualification and appointment booking using AI.
@@ -58,3 +59,7 @@ npm run dev
 - [ ] Real-time notifications for "Hot Leads".
 - [ ] Calendar integration for Appointments.
 - [ ] Multi-tenant billing system.
+=======
+# my-company
+My company repository
+>>>>>>> d10b42d7a483b8114847560a89eafefb11d7e554
