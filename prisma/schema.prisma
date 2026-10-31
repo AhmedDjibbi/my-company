@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Organization {
+  id                String         @id @default(cuid())
+  name              String
+  description       String?
+  plan              String         @default("PLAN_FREE")
+  subscriptionStatus String        @default("ACTIVE")
+  startedAt         DateTime       @default(now())
+  expiresAt         DateTime?
+  users             User[]
+  leads             Lead[]
+  properties        Property[]
+  conversations     Conversation[]
+  appointments      Appointment[]
+  followUps         FollowUp[]
+  auditLogs         AuditLog[]
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model User {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  email          String       @unique
+  name           String?
+  password       String?
+  role           String       @default("AGENT")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  appointments   Appointment[]
+}
+
+model Lead {
+  id                String       @id @default(cuid())
+  organizationId     String
+  organization      Organization @relation(fields: [organizationId], references: [id])
+  name              String?
+  phone              String?
+  email             String?
+  source            String       @default("OTHER")
+  originalMessage   String?
+  preferredLanguage String?
+  budgetMin         Float?
+  budgetMax         Float?
+  propertyType      String?
+  bedrooms          Int?
+  bathrooms         Int?
+  location          String?
+  preferredAreas    String?      // Stored as JSON string
+  purpose           String?      // buying, renting, investment
+  urgency           String?      // low, medium, high
+  leadScore         Int          @default(0)
+  leadStatus        String       @default("NEW")
+  aiConfidence      Float?
+  assignedAgentId   String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+  lastContactAt     DateTime?
+  nextFollowUpAt    DateTime?
+  conversations     Conversation[]
+  appointments      Appointment[]
+  followUps         FollowUp[]
+}
+
+model Conversation {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  leadId         String
+  lead           Lead         @relation(fields: [leadId], references: [id])
+  channel        String       @default("WEBSITE")
+  status         String       @default("ACTIVE")
+  isHumanControlled Boolean   @default(false)
+  messages       Message[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  direction      String       // INBOUND, OUTBOUND
+  sender         String
+  text           String
+  timestamp      DateTime     @default(now())
+  aiGenerated    Boolean      @default(false)
+  confidence     Float?
+}
+
+model Property {
+  id              String       @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id])
+  title           String
+  description     String
+  propertyType    String       @default("OTHER")
+  transactionType String       @default("SALE")
+  price           Float
+  location        String
+  city            String
+  area            String?
+  bedrooms        Int?
+  bathrooms       Int?
+  surface         Float?
+  furnished       Boolean      @default(false)
+  status          String       @default("AVAILABLE")
+  images          String?      // Stored as JSON string
+  features       String?      // Stored as JSON string
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  appointments    Appointment[]
+}
+
+model Appointment {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  leadId         String
+  lead           Lead         @relation(fields: [leadId], references: [id])
+  propertyId     String?
+  property       Property?    @relation(fields: [propertyId], references: [id])
+  agentId        String
+  agent          User         @relation(fields: [agentId], references: [id])
+  date           DateTime
+  startTime      String
+  endTime        String
+  status         String       @default("REQUESTED")
+  notes          String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model FollowUp {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  leadId         String
+  lead           Lead         @relation(fields: [leadId], references: [id])
+  scheduledDate  DateTime
+  content        String
+  status         String       @default("PENDING")
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model AIInteraction {
+  id             String   @id @default(cuid())
+  leadId         String?
+  prompt         String
+  response       String
+  tokensUsed     Int?
+  durationMs     Int?
+  provider       String
+  createdAt      DateTime @default(now())
+}
+
+model AuditLog {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  userId         String?
+  action         String
+  details        String?
+  ipAddress      String?
+  createdAt      DateTime     @default(now())
+}

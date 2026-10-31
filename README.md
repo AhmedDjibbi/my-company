@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LeadFlow AI - AI Lead Recovery & Appointment Automation
 
-## Getting Started
+LeadFlow AI is a B2B SaaS designed for high-value Tunisian businesses (Real Estate, Automotive, Hotels) to automate lead qualification and appointment booking using AI.
 
-First, run the development server:
+## 🚀 Quick Start
 
-```bash
+### 1. Prerequisites
+- Node.js 18+
+- Ollama (installed and running locally)
+- A PostgreSQL database (or the system will use SQLite for local dev)
+
+### 2. Installation
+\`\`\`bash
+cd leadflow-ai
+npm install
+\`\`\`
+
+### 3. AI Setup (Ollama)
+Ensure Ollama is running and you have the requested model (e.g., llama3):
+\`\`\`bash
+ollama run llama3
+\`\`\`
+
+### 4. Database Setup
+\`\`\`bash
+npx prisma db push
+npm run seed
+\`\`\`
+
+### 5. Run Development Server
+\`\`\`bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+\`\`\`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS, shadcn/ui.
+- **Backend**: Next.js Server Actions & API Routes.
+- **Database**: PostgreSQL/SQLite via Prisma ORM.
+- **AI Engine**: Ollama (Local LLM) with a provider-agnostic abstraction.
+- **Auth**: NextAuth.js.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🌟 Demoing the Product
 
-## Learn More
+1. **The Customer Experience**:
+   - Go to `/demo-widget`.
+   - Send a message like: "Bonjour, je cherche une villa à Hammamet, budget 800k DT."
+   - Watch the AI qualify the lead and respond instantly.
 
-To learn more about Next.js, take a look at the following resources:
+2. **The Business Experience**:
+   - Go to `/dashboard`.
+   - Check **Leads** to see the new lead with its AI-calculated score.
+   - Go to **Demo Flow** to see the step-by-step internal logic (Qualification -> Scoring -> Matching -> Response).
+   - Use the **Inbox** to manage conversations.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📈 Roadmap
+- [ ] Meta API Integration (Facebook/Instagram/WhatsApp).
+- [ ] Real-time notifications for "Hot Leads".
+- [ ] Calendar integration for Appointments.
+- [ ] Multi-tenant billing system.
